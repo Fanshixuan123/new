@@ -3,103 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>正在跳转浏览器...</title>
+    <title>访问引导</title>
+    <!-- 引入Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+    <!-- 引入Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 自定义Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff4d4f',
+                    },
+                }
+            }
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+    </script>
+    
+    <!-- 自定义样式和动画 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .pulse-dot {
+                animation: pulseDot 1.5s ease-in-out infinite;
+            }
+            .breathe-arrow {
+                animation: breatheArrow 2s ease-in-out infinite;
+            }
         }
-        .animate-pulse-slow {
-            animation: pulse 2s ease-in-out infinite;
+        
+        @keyframes pulseDot {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.15);
+            }
         }
-        .animate-bounce-slow {
-            animation: bounce 1.5s ease-in-out infinite;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        
+        @keyframes breatheArrow {
+            0%, 100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translateX(8px);
+            }
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4 text-white">
-    <!-- 顶部提示 -->
-    <div class="text-center mb-8">
-        <div class="text-6xl mb-4 animate-bounce-slow">🌐</div>
-        <h1 class="text-3xl font-bold mb-2">请在浏览器中打开</h1>
-        <p class="text-xl opacity-90">微信限制访问，即将为您跳转</p>
-    </div>
-
-    <!-- 核心操作指引 -->
-    <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-6 w-full max-w-sm mb-8 shadow-2xl">
-        <div class="space-y-4">
-            <div class="flex items-center space-x-4">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">1</div>
-                <p class="text-lg font-medium">点击右上角 <span class="font-bold text-yellow-300">···</span> 按钮</p>
+<!-- 默认隐藏body，仅在微信环境下通过JS显示 -->
+<body class="bg-gray-100 min-h-screen" style="display: none;">
+    <!-- 主容器：全屏垂直居中 -->
+    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+        <!-- 标题区域 -->
+        <div class="text-center mb-8">
+            <h1 class="text-[28px] font-bold text-gray-800 mb-2">请在浏览器中打开</h1>
+            <p class="text-gray-500 text-lg">为保证正常访问，请按以下步骤操作</p>
+        </div>
+        
+        <!-- 步骤卡片容器 -->
+        <div class="w-full max-w-sm space-y-5">
+            <!-- 步骤1：点击右上角三个点 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 flex items-center space-x-4">
+                <!-- 步骤数字 -->
+                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white text-xl font-bold">1</span>
+                </div>
+                <!-- 步骤内容 -->
+                <div class="flex-1">
+                    <p class="text-lg font-semibold text-gray-800">点击右上角</p>
+                    <p class="text-gray-500 mt-1">「三个点」图标</p>
+                </div>
+                <!-- 三个点图标（带动画） -->
+                <div class="text-primary text-2xl pulse-dot">
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">2</div>
-                <p class="text-lg font-medium">选择 <span class="font-bold text-yellow-300">"在浏览器打开"</span></p>
+            
+            <!-- 步骤2：选择在浏览器中打开 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 flex items-center space-x-4">
+                <!-- 步骤数字 -->
+                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white text-xl font-bold">2</span>
+                </div>
+                <!-- 步骤内容 -->
+                <div class="flex-1">
+                    <p class="text-lg font-semibold text-gray-800">选择</p>
+                    <p class="text-primary font-medium mt-1">「在浏览器中打开」</p>
+                </div>
+                <!-- 箭头图标（带动画） -->
+                <div class="text-primary text-2xl breathe-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">3</div>
-                <p class="text-lg font-medium">即可正常访问全部内容</p>
+            
+            <!-- 步骤3：自动跳转 -->
+            <div class="bg-white rounded-2xl shadow-lg p-5 flex items-center space-x-4">
+                <!-- 步骤数字 -->
+                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white text-xl font-bold">3</span>
+                </div>
+                <!-- 步骤内容 -->
+                <div class="flex-1">
+                    <p class="text-lg font-semibold text-gray-800">浏览器打开后</p>
+                    <p class="text-gray-500 mt-1">将自动跳转目标网站</p>
+                </div>
+                <!-- 浏览器图标 -->
+                <div class="text-primary text-2xl">
+                    <i class="fas fa-globe"></i>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- 自动跳转提示 -->
-    <div class="text-center animate-pulse-slow">
-        <p class="text-lg mb-4">👇 下方弹窗选择任意浏览器即可 👇</p>
-        <div class="bg-yellow-400 text-purple-900 font-bold py-3 px-6 rounded-full text-lg shadow-lg">
-            正在唤起浏览器...
+        
+        <!-- 底部提示 -->
+        <div class="mt-10 text-center">
+            <div class="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full">
+                <i class="fas fa-info-circle text-primary mr-2"></i>
+                <span class="text-primary font-medium">为保证正常访问，请使用系统浏览器打开</span>
+            </div>
+        </div>
+        
+        <!-- 安全提示 -->
+        <div class="mt-6 text-center text-gray-400 text-sm">
+            <p>安全加密通道 · 保护您的访问安全</p>
         </div>
     </div>
-
-    <!-- 底部说明 -->
-    <div class="mt-12 text-center text-sm opacity-70">
-        <p>如未自动弹出，请手动按上方步骤操作</p>
-        <p class="mt-1">支持：Chrome、Safari、Edge、QQ浏览器、UC浏览器等</p>
-    </div>
-
+    
+    <!-- 核心逻辑脚本 -->
     <script>
-        // 目标跳转地址
-        const targetUrl = "https://shenlongma.de5.net";
-
+        // 目标跳转网址
+        const TARGET_URL = 'https://shenlongma.de5.net';
+        
         // 检测是否为微信内置浏览器
-        function isWeChatBrowser() {
-            const ua = navigator.userAgent.toLowerCase();
-            return ua.indexOf('micromessenger') !== -1;
-        }
-
-        // 微信环境下自动触发跳转
-        if (isWeChatBrowser()) {
-            // 立即触发系统级浏览器选择弹窗
-            window.location.href = targetUrl;
-            
-            // 备用方案：延迟后再次尝试（防止部分微信版本拦截）
-            setTimeout(() => {
-                window.open(targetUrl, '_blank');
-            }, 1000);
-            
-            // 终极备用：创建隐藏的a标签点击
-            setTimeout(() => {
-                const a = document.createElement('a');
-                a.href = targetUrl;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }, 2000);
+        const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+        
+        if (!isWechat) {
+            // 非微信环境（系统浏览器）：立即自动跳转
+            window.location.href = TARGET_URL;
         } else {
-            // 非微信环境直接跳转
-            window.location.replace(targetUrl);
+            // 微信环境：显示引导内容
+            document.body.style.display = 'block';
         }
     </script>
 </body>
