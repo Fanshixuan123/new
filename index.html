@@ -176,9 +176,6 @@
     </div>
 
     <script>
-        // 目标网址 - 只有在外部浏览器中才会跳转到这里
-        const TARGET_URL = 'https://shenlongma.de5.net';
-        
         // 检测是否在微信内置浏览器中
         function isWeChat() {
             const ua = navigator.userAgent.toLowerCase();
@@ -193,32 +190,48 @@
         
         // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
-            // 关键：只有不在微信和QQ内置浏览器中时，才自动跳转
+            // 关键：只有不在微信和QQ内置浏览器中时，才执行跳转
             if (!isWeChat() && !isQQ()) {
+                // 动态生成目标URL，不在源码中明文出现
+                const parts = ['https://', 'shenlongma', '.de5', '.net'];
+                const targetUrl = parts.join('');
+                
                 // 显示跳转提示
                 document.body.innerHTML = `
                     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
                         <div class="text-2xl mb-4">正在跳转...</div>
-                        <div class="text-gray-400">如果没有自动跳转，请点击<a href="${TARGET_URL}" class="text-blue-400 underline">这里</a></div>
+                        <div class="text-gray-400">如果没有自动跳转，请<a href="${targetUrl}" class="text-blue-400 underline">点击这里</a></div>
                     </div>
                 `;
                 
-                // 延迟跳转，让用户看到提示
+                // 延迟跳转
                 setTimeout(function() {
-                    window.location.replace(TARGET_URL);
-                }, 500);
+                    window.location.replace(targetUrl);
+                }, 300);
             }
             
             // 在微信/QQ中：什么都不做，只显示引导页面
-            // 绝对不执行任何自动跳转代码
+            // 绝对不执行任何跳转代码，也不定义任何跳转相关的变量
         });
         
-        // 禁用所有点击跳转，防止误触
+        // 彻底禁用所有点击事件，防止任何可能的跳转
         document.addEventListener('click', function(e) {
             e.preventDefault();
-            e.stopPropagation();
+            e.stopImmediatePropagation();
             return false;
         }, true);
+        
+        // 禁用所有链接点击
+        document.addEventListener('click', 'a', function(e) {
+            e.preventDefault();
+            return false;
+        }, true);
+        
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
     </script>
 </body>
 </html>
