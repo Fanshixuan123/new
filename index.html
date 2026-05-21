@@ -1,83 +1,45 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>请在浏览器打开</title>
-    <link rel="stylesheet" href="layer/theme/default/layer.css">
-    <script src="jquery-3.3.1.min.js"></script>
-    <script src="layer/layer.js"></script>
-    <script src="clipboard.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Microsoft Yahei", sans-serif;
-            background: #f5f5f5;
-        }
-        .container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .banner {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .tip {
-            font-size: 16px;
-            color: #666;
-            margin: 20px 0;
-        }
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background: #007aff;
-            color: white;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 16px;
-            cursor: pointer;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>跳转提示</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f5f5f5;font-family:Arial,"微软雅黑";}
+.container{max-width:400px;margin:50px auto;padding:30px 20px;background:#fff;border-radius:12px;text-align:center;}
+.title{font-size:18px;color:#333;margin-bottom:15px;}
+.desc{font-size:14px;color:#666;line-height:1.6;margin-bottom:25px;}
+</style>
 </head>
 <body>
-    <div class="container">
-        <img src="banner.png" class="banner" alt="banner">
-        <div class="tip">
-            <p>⚠️ 请点击右上角，选择「在浏览器中打开」</p>
-            <p>或复制下方链接到浏览器访问</p>
-        </div>
-        <div class="btn" id="copyBtn" data-clipboard-text="https://shenlongma.de5.net">复制链接</div>
+
+<div class="container">
+    <div class="title">请在浏览器打开继续</div>
+    <div class="desc">
+        点击右上角<br>
+        选择【在浏览器打开】<br>
+        即可正常访问
     </div>
+</div>
 
-    <script>
-        // 判断是否在微信/QQ内置浏览器
-        var ua = navigator.userAgent.toLowerCase();
-        var isWeixin = ua.indexOf('micromessenger') != -1;
-        var isQQ = ua.indexOf('qq') != -1 && ua.indexOf('mqqbrowser') == -1;
+<script>
+// 目标网址（你的网址）
+var targetUrl = "https://shenlongma.de5.net";
 
-        if (isWeixin || isQQ) {
-            // 在微信/QQ里，显示提示
-            layer.open({
-                title: '提示',
-                content: '请点击右上角，选择「在浏览器中打开」',
-                btn: ['我知道了']
-            });
-        } else {
-            // 正常浏览器，直接跳转到目标页面
-            window.location.href = "https://shenlongma.de5.net";
-        }
+// 判断是否在微信/QQ内置浏览器
+var ua = navigator.userAgent.toLowerCase();
+var isWeChat = ua.indexOf('micromessenger') > -1;
+var isQQ = ua.indexOf('qq') > -1 && ua.indexOf('mqqbrowser') == -1;
 
-        // 复制链接功能
-        var clipboard = new ClipboardJS('#copyBtn');
-        clipboard.on('success', function(e) {
-            layer.msg('链接已复制！');
-            e.clearSelection();
-        });
-    </script>
+if (isWeChat || isQQ) {
+    // 微信/QQ内：弹出提示
+    alert("请点击右上角 → 在浏览器中打开，即可继续访问");
+} else {
+    // 外部浏览器：直接跳转你的网站
+    window.location.href = targetUrl;
+}
+</script>
+
 </body>
 </html>
