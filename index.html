@@ -2,54 +2,73 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>正在打开...</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>请在浏览器中打开</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         html, body {
             width: 100%;
             height: 100%;
             overflow: hidden;
         }
+        
+        #guide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            position: fixed;
+            top: 0;
+            left: 0;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ffffff;
+            font-size: 120px;
+            font-weight: bold;
+            transform: rotate(45deg);
+            line-height: 1;
+        }
+        
+        .text {
+            color: #ff0000;
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.8;
+        }
     </style>
 </head>
 <body>
-    <div id="guide" class="fixed inset-0 w-full h-full flex flex-col items-center justify-center" style="background: rgba(0,0,0,0.85); display: none;">
-        <!-- 巨大白色箭头指向右上角 -->
-        <div class="absolute top-16 right-8">
-            <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 80 L80 20 M80 20 L40 20 M80 20 L80 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        
-        <!-- 引导文字 -->
-        <div class="text-center px-8">
-            <p class="text-red-500 text-3xl font-bold mb-6">① 请选择右上角 [...] 按钮</p>
-            <p class="text-red-500 text-3xl font-bold">② 再点击「在浏览器中打开」</p>
+    <div id="guide">
+        <div class="arrow">↗</div>
+        <div class="text">
+            <div>① 请选择右上角 [...] 按钮</div>
+            <div>② 再点击「在浏览器中打开」</div>
         </div>
     </div>
 
     <script>
-        (function() {
-            var targetUrl = 'https://shenlongma.de5.net';
-            var ua = navigator.userAgent.toLowerCase();
-            var isWechat = /micromessenger/.test(ua);
-            
-            if (isWechat) {
-                // 微信环境：显示引导内容 + 触发原生弹窗
-                document.getElementById('guide').style.display = 'flex';
-                // 立即触发跳转，微信会自动弹出原生提示框
-                window.location.href = targetUrl;
-            } else {
-                // 非微信环境：直接跳转，不显示任何内容
-                window.location.replace(targetUrl);
-            }
-        })();
+        const TARGET = 'https://shenlongma.de5.net';
+        const isWechat = /micromessenger/i.test(navigator.userAgent);
+
+        if (isWechat) {
+            document.getElementById('guide').style.display = 'flex';
+        } else {
+            window.location.replace(TARGET);
+        }
     </script>
 </body>
 </html>
