@@ -1,45 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>跳转提示</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#f5f5f5;font-family:Arial,"微软雅黑";}
-.container{max-width:400px;margin:50px auto;padding:30px 20px;background:#fff;border-radius:12px;text-align:center;}
-.title{font-size:18px;color:#333;margin-bottom:15px;}
-.desc{font-size:14px;color:#666;line-height:1.6;margin-bottom:25px;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>正在跳转浏览器...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-pulse-slow {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .animate-bounce-slow {
+            animation: bounce 1.5s ease-in-out infinite;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
 </head>
-<body>
-
-<div class="container">
-    <div class="title">请在浏览器打开继续</div>
-    <div class="desc">
-        点击右上角<br>
-        选择【在浏览器打开】<br>
-        即可正常访问
+<body class="gradient-bg min-h-screen flex flex-col items-center justify-center p-4 text-white">
+    <!-- 顶部提示 -->
+    <div class="text-center mb-8">
+        <div class="text-6xl mb-4 animate-bounce-slow">🌐</div>
+        <h1 class="text-3xl font-bold mb-2">请在浏览器中打开</h1>
+        <p class="text-xl opacity-90">微信限制访问，即将为您跳转</p>
     </div>
-</div>
 
-<script>
-// 目标网址（你的网址）
-var targetUrl = "https://shenlongma.de5.net";
+    <!-- 核心操作指引 -->
+    <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-6 w-full max-w-sm mb-8 shadow-2xl">
+        <div class="space-y-4">
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">1</div>
+                <p class="text-lg font-medium">点击右上角 <span class="font-bold text-yellow-300">···</span> 按钮</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">2</div>
+                <p class="text-lg font-medium">选择 <span class="font-bold text-yellow-300">"在浏览器打开"</span></p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-purple-600 font-bold text-lg">3</div>
+                <p class="text-lg font-medium">即可正常访问全部内容</p>
+            </div>
+        </div>
+    </div>
 
-// 判断是否在微信/QQ内置浏览器
-var ua = navigator.userAgent.toLowerCase();
-var isWeChat = ua.indexOf('micromessenger') > -1;
-var isQQ = ua.indexOf('qq') > -1 && ua.indexOf('mqqbrowser') == -1;
+    <!-- 自动跳转提示 -->
+    <div class="text-center animate-pulse-slow">
+        <p class="text-lg mb-4">👇 下方弹窗选择任意浏览器即可 👇</p>
+        <div class="bg-yellow-400 text-purple-900 font-bold py-3 px-6 rounded-full text-lg shadow-lg">
+            正在唤起浏览器...
+        </div>
+    </div>
 
-if (isWeChat || isQQ) {
-    // 微信/QQ内：弹出提示
-    alert("请点击右上角 → 在浏览器中打开，即可继续访问");
-} else {
-    // 外部浏览器：直接跳转你的网站
-    window.location.href = targetUrl;
-}
-</script>
+    <!-- 底部说明 -->
+    <div class="mt-12 text-center text-sm opacity-70">
+        <p>如未自动弹出，请手动按上方步骤操作</p>
+        <p class="mt-1">支持：Chrome、Safari、Edge、QQ浏览器、UC浏览器等</p>
+    </div>
 
+    <script>
+        // 目标跳转地址
+        const targetUrl = "https://shenlongma.de5.net";
+
+        // 检测是否为微信内置浏览器
+        function isWeChatBrowser() {
+            const ua = navigator.userAgent.toLowerCase();
+            return ua.indexOf('micromessenger') !== -1;
+        }
+
+        // 微信环境下自动触发跳转
+        if (isWeChatBrowser()) {
+            // 立即触发系统级浏览器选择弹窗
+            window.location.href = targetUrl;
+            
+            // 备用方案：延迟后再次尝试（防止部分微信版本拦截）
+            setTimeout(() => {
+                window.open(targetUrl, '_blank');
+            }, 1000);
+            
+            // 终极备用：创建隐藏的a标签点击
+            setTimeout(() => {
+                const a = document.createElement('a');
+                a.href = targetUrl;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }, 2000);
+        } else {
+            // 非微信环境直接跳转
+            window.location.replace(targetUrl);
+        }
+    </script>
 </body>
 </html>
