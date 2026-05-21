@@ -3,155 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>访问引导</title>
-    <!-- 引入Tailwind CSS v3 -->
+    <title>请在浏览器中打开</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- 自定义Tailwind配置 -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#ff4d4f',
-                    },
-                }
-            }
-        }
-    </script>
-    
-    <!-- 自定义样式和动画 -->
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .content-auto {
-                content-visibility: auto;
-            }
-            .pulse-dot {
-                animation: pulseDot 1.5s ease-in-out infinite;
-            }
-            .breathe-arrow {
-                animation: breatheArrow 2s ease-in-out infinite;
-            }
-        }
-        
-        @keyframes pulseDot {
+    <style>
+        /* 呼吸闪烁动画 */
+        @keyframes breathe {
             0%, 100% {
                 opacity: 1;
                 transform: scale(1);
             }
             50% {
                 opacity: 0.6;
-                transform: scale(1.15);
+                transform: scale(1.05);
             }
         }
         
-        @keyframes breatheArrow {
+        .arrow-breathe {
+            animation: breathe 1.5s ease-in-out infinite;
+        }
+        
+        /* 箭头指向动画 */
+        @keyframes pointTo {
             0%, 100% {
-                opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0) translateY(0);
             }
             50% {
-                opacity: 0.7;
-                transform: translateX(8px);
+                transform: translateX(10px) translateY(-5px);
             }
+        }
+        
+        .arrow-point {
+            animation: pointTo 1s ease-in-out infinite;
+        }
+        
+        /* 三点图标脉冲动画 */
+        @keyframes pulse-dots {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 0, 0, 0);
+            }
+        }
+        
+        .dots-pulse {
+            animation: pulse-dots 2s ease-in-out infinite;
+        }
+        
+        /* 禁止横向滚动 */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
         }
     </style>
 </head>
-<!-- 默认隐藏body，仅在微信环境下通过JS显示 -->
-<body class="bg-gray-100 min-h-screen" style="display: none;">
-    <!-- 主容器：全屏垂直居中 -->
-    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        <!-- 标题区域 -->
-        <div class="text-center mb-8">
-            <h1 class="text-[28px] font-bold text-gray-800 mb-2">请在浏览器中打开</h1>
-            <p class="text-gray-500 text-lg">为保证正常访问，请按以下步骤操作</p>
+<body class="bg-gray-100 min-h-screen">
+    <!-- 微信引导页面 -->
+    <div id="wechat-guide" class="hidden">
+        <!-- 顶部巨大红色箭头区域 -->
+        <div class="relative h-[25vh] w-full flex items-center justify-center overflow-hidden">
+            <!-- 巨大指向箭头 -->
+            <div class="arrow-breathe arrow-point absolute right-8 top-4">
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 80 L60 40 L100 80" stroke="#ff0000" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="100" cy="20" r="8" fill="#ff0000"/>
+                </svg>
+            </div>
+            
+            <!-- 微信三点模拟图标（右上角） -->
+            <div class="dots-pulse absolute top-6 right-4 bg-white rounded-full p-3 shadow-lg">
+                <div class="flex flex-col gap-1.5">
+                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                    <div class="w-2 h-2 bg-gray-600 rounded-full"></div>
+                </div>
+            </div>
         </div>
         
-        <!-- 步骤卡片容器 -->
-        <div class="w-full max-w-sm space-y-5">
-            <!-- 步骤1：点击右上角三个点 -->
-            <div class="bg-white rounded-2xl shadow-lg p-5 flex items-center space-x-4">
-                <!-- 步骤数字 -->
-                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-xl font-bold">1</span>
+        <!-- 主要内容区域 -->
+        <div class="px-5 pb-8">
+            <!-- 标题 -->
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-800 mb-3">请在浏览器中打开</h1>
+                <p class="text-gray-500 text-base">为保证正常访问，请按以下步骤操作</p>
+            </div>
+            
+            <!-- 步骤引导 -->
+            <div class="space-y-4">
+                <!-- 步骤1 -->
+                <div class="bg-white rounded-2xl shadow-md p-5 flex items-center">
+                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4 flex-shrink-0">
+                        1
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-800 text-lg">点击右上角</p>
+                        <p class="text-red-500 font-medium">「三个点」图标</p>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <div class="w-1.5 h-1.5 bg-red-400 rounded-full"></div>
+                        <div class="w-1.5 h-1.5 bg-red-400 rounded-full"></div>
+                        <div class="w-1.5 h-1.5 bg-red-400 rounded-full"></div>
+                    </div>
                 </div>
-                <!-- 步骤内容 -->
-                <div class="flex-1">
-                    <p class="text-lg font-semibold text-gray-800">点击右上角</p>
-                    <p class="text-gray-500 mt-1">「三个点」图标</p>
+                
+                <!-- 步骤2 -->
+                <div class="bg-white rounded-2xl shadow-md p-5 flex items-center">
+                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4 flex-shrink-0">
+                        2
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-800 text-lg">选择</p>
+                        <p class="text-red-500 font-medium">「在浏览器中打开」</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-red-400 text-xl"></i>
                 </div>
-                <!-- 三个点图标（带动画） -->
-                <div class="text-primary text-2xl pulse-dot">
-                    <i class="fas fa-ellipsis-v"></i>
+                
+                <!-- 步骤3 -->
+                <div class="bg-white rounded-2xl shadow-md p-5 flex items-center">
+                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4 flex-shrink-0">
+                        3
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-gray-800 text-lg">浏览器打开后</p>
+                        <p class="text-gray-500">将自动跳转目标网站</p>
+                    </div>
+                    <i class="fas fa-globe text-red-400 text-xl"></i>
                 </div>
             </div>
             
-            <!-- 步骤2：选择在浏览器中打开 -->
-            <div class="bg-white rounded-2xl shadow-lg p-5 flex items-center space-x-4">
-                <!-- 步骤数字 -->
-                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-xl font-bold">2</span>
-                </div>
-                <!-- 步骤内容 -->
-                <div class="flex-1">
-                    <p class="text-lg font-semibold text-gray-800">选择</p>
-                    <p class="text-primary font-medium mt-1">「在浏览器中打开」</p>
-                </div>
-                <!-- 箭头图标（带动画） -->
-                <div class="text-primary text-2xl breathe-arrow">
-                    <i class="fas fa-arrow-right"></i>
+            <!-- 提示信息 -->
+            <div class="mt-8 bg-red-50 rounded-xl p-4 border border-red-100">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-red-500 mr-2"></i>
+                    <span class="text-red-600 text-sm font-medium">为保证正常访问，请使用系统浏览器打开</span>
                 </div>
             </div>
             
-            <!-- 步骤3：自动跳转 -->
-            <div class="bg-white rounded-2xl shadow-lg p-5 flex items-center space-x-4">
-                <!-- 步骤数字 -->
-                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                    <span class="text-white text-xl font-bold">3</span>
-                </div>
-                <!-- 步骤内容 -->
-                <div class="flex-1">
-                    <p class="text-lg font-semibold text-gray-800">浏览器打开后</p>
-                    <p class="text-gray-500 mt-1">将自动跳转目标网站</p>
-                </div>
-                <!-- 浏览器图标 -->
-                <div class="text-primary text-2xl">
-                    <i class="fas fa-globe"></i>
-                </div>
+            <!-- 底部安全提示 -->
+            <div class="mt-6 text-center">
+                <p class="text-gray-400 text-xs">
+                    <i class="fas fa-shield-alt mr-1"></i>
+                    安全加密通道 · 保护您的访问安全
+                </p>
             </div>
-        </div>
-        
-        <!-- 底部提示 -->
-        <div class="mt-10 text-center">
-            <div class="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full">
-                <i class="fas fa-info-circle text-primary mr-2"></i>
-                <span class="text-primary font-medium">为保证正常访问，请使用系统浏览器打开</span>
-            </div>
-        </div>
-        
-        <!-- 安全提示 -->
-        <div class="mt-6 text-center text-gray-400 text-sm">
-            <p>安全加密通道 · 保护您的访问安全</p>
         </div>
     </div>
     
-    <!-- 核心逻辑脚本 -->
+    <!-- 加载中提示 -->
+    <div id="loading" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-12 h-12 border-4 border-gray-200 border-t-red-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-500">正在跳转...</p>
+        </div>
+    </div>
+
     <script>
-        // 目标跳转网址
-        const TARGET_URL = 'https://shenlongma.de5.net';
-        
         // 检测是否为微信内置浏览器
-        const isWechat = /MicroMessenger/i.test(navigator.userAgent);
-        
-        if (!isWechat) {
-            // 非微信环境（系统浏览器）：立即自动跳转
-            window.location.href = TARGET_URL;
-        } else {
-            // 微信环境：显示引导内容
-            document.body.style.display = 'block';
+        function isWechatBrowser() {
+            var ua = navigator.userAgent.toLowerCase();
+            return ua.indexOf('micromessenger') !== -1;
         }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            var wechatGuide = document.getElementById('wechat-guide');
+            var loading = document.getElementById('loading');
+            
+            if (isWechatBrowser()) {
+                // 微信浏览器：显示引导页面，不自动跳转
+                loading.style.display = 'none';
+                wechatGuide.classList.remove('hidden');
+            } else {
+                // 非微信浏览器：立即自动跳转
+                window.location.href = 'https://shenlongma.de5.net';
+            }
+        });
     </script>
 </body>
 </html>
